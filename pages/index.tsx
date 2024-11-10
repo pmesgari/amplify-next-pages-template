@@ -3,9 +3,11 @@ import type { Schema } from "../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 import { getCurrentUser } from 'aws-amplify/auth';
 
+import Link from 'next/link'
+
 const client = generateClient<Schema>();
 
-function Programs() {
+function Index() {
   const [currentUser, setCurrentUser] = useState('');
   const [programs, setPrograms] = useState<Array<Schema["Program"]["type"]>>([]);
 
@@ -29,7 +31,7 @@ function Programs() {
 
   return (
     <main>
-      {/* <section className="hero is-success">
+      <section className="hero is-success">
         <div className="hero-body">
           <p className="title">Programs</p>
           <p className="subtitle">Available Programs</p>
@@ -37,12 +39,12 @@ function Programs() {
       </section>
       {!currentUser &&
         <section className="section">
-          <p>Log In</p>
+          <Link href="/dashboard">Log In</Link>
         </section>
       }
       <section className="section">
         {programs.map((program) => (
-          <div>
+          <div key={program.id}>
             <div>
               <p>{program.id}</p>
               <p>{program.name}</p>
@@ -52,9 +54,9 @@ function Programs() {
             <br />
           </div>
         ))}
-      </section> */}
+      </section>
     </main>
   );
 }
 
-export default Programs;
+export default Index;

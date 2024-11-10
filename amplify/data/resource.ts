@@ -39,6 +39,12 @@ const schema = a.schema({
       description: a.string(),
       checkout_link: a.string(),
     }).authorization((allow) => [allow.publicApiKey()]),
+  ProgramModule: a
+    .model({
+      section: a.string(),
+      module: a.string(),
+      belongs_to: a.string(),
+    }).authorization((allow) => [allow.groupDefinedIn("belongs_to")])
 });
 
 export type Schema = ClientSchema<typeof schema>;
