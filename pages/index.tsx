@@ -29,7 +29,7 @@ function Programs() {
 
   return (
     <main>
-      <section className="hero is-success">
+      {/* <section className="hero is-success">
         <div className="hero-body">
           <p className="title">Programs</p>
           <p className="subtitle">Available Programs</p>
@@ -52,7 +52,7 @@ function Programs() {
             <br />
           </div>
         ))}
-      </section>
+      </section> */}
     </main>
   );
 }
