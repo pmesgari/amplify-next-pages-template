@@ -1,44 +1,60 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import type { Schema } from "../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
-import type { Schema } from "@/amplify/data/resource";
+import { getCurrentUser } from 'aws-amplify/auth';
 
 const client = generateClient<Schema>();
 
-export default function App() {
-  const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
-
-  function listTodos() {
-    client.models.Todo.observeQuery().subscribe({
-      next: (data) => setTodos([...data.items]),
-    });
-  }
+function Programs() {
+  const [currentUser, setCurrentUser] = useState('');
+  const [programs, setPrograms] = useState<Array<Schema["Program"]["type"]>>([]);
 
   useEffect(() => {
-    listTodos();
-  }, []);
 
-  function createTodo() {
-    client.models.Todo.create({
-      content: window.prompt("Todo content"),
+    client.models.Program.observeQuery().subscribe({
+      next: (data) => setPrograms([...data.items]),
     });
-  }
+
+    const fetchUser = async () => {
+      try {
+        const { username } = await getCurrentUser();
+        setCurrentUser(username);
+      } catch (error) {
+        console.error("Error fetching current user:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   return (
     <main>
-      <h1>My todos</h1>
-      <button onClick={createTodo}>+ new</button>
-      <ul>
-        {todos.map((todo) => (
-          <li key={todo.id}>{todo.content}</li>
+      <section className="hero is-success">
+        <div className="hero-body">
+          <p className="title">Programs</p>
+          <p className="subtitle">Available Programs</p>
+        </div>
+      </section>
+      {!currentUser &&
+        <section className="section">
+          <p>Log In</p>
+        </section>
+      }
+      <section className="section">
+        {programs.map((program) => (
+          <div>
+            <div>
+              <p>{program.id}</p>
+              <p>{program.name}</p>
+              <p>{program.description}</p>
+              <a href="https://buy.stripe.com/test_eVa29jcMbg1l5rieUU" target="_blank">Purchase</a>
+            </div>
+            <br />
+          </div>
         ))}
-      </ul>
-      <div>
-        🥳 App successfully hosted. Try creating a new todo.
-        <br />
-        <a href="https://docs.amplify.aws/gen2/start/quickstart/nextjs-pages-router/">
-          Review next steps of this tutorial.
-        </a>
-      </div>
+      </section>
     </main>
   );
 }
+
+export default Programs;
