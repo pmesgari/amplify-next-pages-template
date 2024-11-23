@@ -2,10 +2,18 @@ import { defineBackend } from '@aws-amplify/backend';
 import { auth } from './auth/resource';
 import { data } from './data/resource';
 
-import { handleStripeEventLambda } from './functions/handle-stripe-event/resource';
 
-defineBackend({
+import { handleStripeEventLambda } from './functions/handle-stripe-event/resource';
+import { DynamoDBStack } from './custom/data/resource';
+
+const backend = defineBackend({
   auth,
   data,
-  handleStripeEventLambda
+  handleStripeEventLambda,
 });
+
+new DynamoDBStack(
+  backend.stack,
+  'dynamodbResource',
+  {}
+)
